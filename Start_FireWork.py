@@ -14,7 +14,8 @@ vector = pygame.math.Vector2
 # 重力变量
 gravity = vector(0, 0.3)
 # 控制窗口的大小
-DISPLAY_WIDTH = DISPLAY_HEIGHT = 800
+# DISPLAY_WIDTH = 0
+# DISPLAY_HEIGHT= 0
 
 # 颜色选项
 trail_colours = [(45, 45, 45), (60, 60, 60), (75, 75, 75), (125, 125, 125), (150, 150, 150)]
@@ -24,7 +25,7 @@ static_offset = 3
 
 # =======Firework : 整体部分；================
 class Firework:
-    def __init__(self):
+    def __init__(self,DISPLAY_WIDTH,DISPLAY_HEIGHT):
         # 随机颜色
         self.colour = (randint(0, 255), randint(0, 255), randint(0, 255))
         self.colours = (
@@ -195,32 +196,39 @@ def update(win, fireworks):
 def Draw():
     pygame.init()
     # 加载背景音乐
-    '''
-    pygame.mixer.music.load("./res/音乐文件名")
+    pygame.mixer.music.load("./data/newyear.mp3")
     # 循环播放背景音乐
     pygame.mixer.music.play(-1)
     # 停止背景音乐
-    pygame.mixer.music.stop()
+    # pygame.mixer.music.stop()
     # 加载音效
-    boom_sound = pygame.mixer.Sound("./res/音效名")
+    boom_sound = pygame.mixer.Sound("./data/newyear.mp3")
     # 播放音效
     boom_sound.play()
     boom_sound.stop()
-    '''
-
-    pygame.display.set_caption("Happy New Years")  # 标题
+    pygame.display.set_caption("新年demo")  # 标题
     background = pygame.image.load("./data/1.png")  # 背景
-    title_font = pygame.font.Font("./data/hanyijielongtaohuayuan.ttf", 75)
-    author_font = pygame.font.Font("./data/hanyijielongtaohuayuan.ttf", 30)
+    title_font = pygame.font.Font("./data/hanyijielongtaohuayuan.ttf", 30)
+    author_font = pygame.font.Font("./data/hanyijielongtaohuayuan.ttf", 15)
     title = title_font.render("新年快乐", False, (0, 0, 0), (220, 20, 60))
-    author = author_font.render("制作：无名", False, (251, 59, 85))
+    author = author_font.render("By 无名", False, (250, 59, 85))
+    DISPLAY_WIDTH = background.get_width()
+    DISPLAY_HEIGHT = background.get_height()
+    # 计算文本居中位置
+    title_rect = title.get_rect()  # 获取title的矩形区域
+    title_center_x = DISPLAY_WIDTH // 2
+    title_center_y = DISPLAY_HEIGHT // 2
+    title_rect.center = (title_center_x, 50)  # 设置文本矩形的中心为屏幕中心
+    author_rect=author.get_rect()
+    author_rect.center = (title_center_x, 80)
+
 
     # pygame.image.load("")
     win = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
     # win.blit(background)
     clock = pygame.time.Clock()
 
-    fireworks = [Firework() for i in range(2)]  # create the first fireworks
+    fireworks = [Firework(DISPLAY_WIDTH,DISPLAY_HEIGHT) for i in range(2)]  # create the first fireworks
     running = True
 
     while running:
@@ -230,20 +238,20 @@ def Draw():
                 running = False
             if event.type == pygame.KEYDOWN:  # Change game speed with number keys
                 if event.key == pygame.K_1:  # 按下 1
-                    fireworks.append(Firework())
+                    fireworks.append(Firework(DISPLAY_WIDTH,DISPLAY_HEIGHT))
                 if event.key == pygame.K_2:  # 按下 2 加入10个烟花
                     for i in range(10):
-                        fireworks.append(Firework())
+                        fireworks.append(Firework(DISPLAY_WIDTH,DISPLAY_HEIGHT))
                 if event.key == pygame.K_3:  # 按下 3 加入100个烟花
                     for i in range(100):
-                        fireworks.append(Firework())
-        win.fill((20, 20, 30))  # draw background
+                        fireworks.append(Firework(DISPLAY_WIDTH,DISPLAY_HEIGHT))
+        win.fill((20, 20, 30))  # 绘制背景
         win.blit(background, (0, 0))
-        win.blit(title, (200, 30))
-        win.blit(author, (520, 80))
+        win.blit(title, title_rect)  # 用过位置绘制标题
+        win.blit(author, author_rect)
 
         if randint(0, 20) == 1:  # 创建新的烟花
-            fireworks.append(Firework())
+            fireworks.append(Firework(DISPLAY_WIDTH,DISPLAY_HEIGHT))
         update(win, fireworks)
     pygame.quit()
     quit()
@@ -253,7 +261,7 @@ def Draw():
 def main():
     pygame.init()
     pygame.font.init()
-    # sound_wav = pygame.mixer.music.load("2.mp3")
+    # sound_wav = pygame.mixer.music.load("./newyear.mp3")
     # pygame.mixer.music.play()
 
 Draw()
